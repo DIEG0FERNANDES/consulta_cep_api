@@ -1,7 +1,6 @@
 {
   "name": "consulta-cep-api",
-  "version": "1.0.0",
-  "main": "server.ts",
+  "version": "1.0.1",
   "license": "MIT",
   "scripts": {
     "start": "nodemon --exec ts-node src/server.ts",

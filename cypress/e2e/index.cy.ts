@@ -1,3 +1,5 @@
+var fixtures: Map<string, any>;
+
 describe('Tests about singup and query of cods from postal code', () => {
   it('should return welcome message', () => {
     cy.request({ method: 'GET', url: '/' }).then((response) => {
@@ -6,41 +8,41 @@ describe('Tests about singup and query of cods from postal code', () => {
     })
   })
   
-  // before(() => {
-  //   cy.task('truncateCollection');
+  before(() => {
+    cy.task('queryCollection');
 
-  //   this.fixtures = new Map<string, any>();
+    this.fixtures = new Map<string, any>();
 
-  //   const fixturesNames: string[] = [
-  //     'validCep',
-  //     'invalidCep',
-  //     'invalidLogradouro'
-  //   ];
+    const fixturesNames: string[] = [
+      'validCep',
+      'invalidCep',
+      'invalidLogradouro'
+    ];
 
-  //   fixturesNames.forEach((fixtureName) => {
-  //     cy.fixture(fixtureName).then((fixture) => {
-  //       this.fixtures.set(fixtureName, fixture);
-  //     });
-  //   });
-  // });
+    fixturesNames.forEach((fixtureName) => {
+      cy.fixture(fixtureName).then((fixture) => {
+        this.fixtures.set(fixtureName, fixture);
+      });
+    });
+  });
+  
+  it('deve salvar um CEP com dados válidos', () => {
+    const validCep = this.fixtures.get('validCep');
+    
+    const requestOptions: Partial<Cypress.RequestOptions> = {
+      method: 'POST',
+      url: '/ceps',
+      body: <Cypress.RequestBody>validCep,
+      failOnStatusCode: false
+    };
 
-  // it('deve salvar um CEP com dados válidos', () => {
-  //   const validCep = this.fixtures.get('validCep');
-
-  //   const requestOptions: Partial<Cypress.RequestOptions> = {
-  //     method: 'POST',
-  //     url: '/ceps',
-  //     body: <Cypress.RequestBody>validCep,
-  //     failOnStatusCode: false
-  //   };
-
-  //   cy.request(requestOptions)
-  //     .then(({ body, status }) => {
-  //       expect(status).to.equal(201);
-  //       const { mensagem } = body;
-  //       expect(mensagem).to.equal('CEP cadastrado com sucesso');
-  //     });
-  // });
+    cy.request(requestOptions)
+      .then(({ body, status }) => {
+        expect(status).to.equal(201);
+        const { mensagem } = body;
+        expect(mensagem).to.equal('CEP cadastrado com sucesso');
+      });
+  });
 
   // it('não deve salvar um CEP com um número de CEP inválido', () => {
   //   const invalidCep = this.fixtures.get('invalidCep');
