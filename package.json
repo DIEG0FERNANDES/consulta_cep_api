@@ -1,9 +1,13 @@
 {
   "name": "consulta-cep-api",
   "version": "1.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/DIEG0FERNANDES/consulta_cep_api.git",
+  "author": "Diego_dos_Santos_Fernandes <cookieezito@hotmail.com>",
   "license": "MIT",
   "scripts": {
     "start": "nodemon --exec ts-node src/server.ts",
+    "test": "SET \"NODE_ENV=test\" && nodemon --exec ts-node src/server.ts",
     "cy:open": "cypress open",
     "cy:run": "cypress run"
   },

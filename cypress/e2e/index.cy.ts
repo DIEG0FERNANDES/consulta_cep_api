@@ -1,5 +1,9 @@
-var fixtures: Map<string, any>;
-
+let requestOptions: Partial<Cypress.RequestOptions> = {
+  method: 'POST',
+  url: '/querys',
+  body: <Cypress.RequestBody>queryValid,,
+  failOnStatusCode: false
+}
 describe('Tests about singup and query of cods from postal code', () => {
   it('should return welcome message', () => {
     cy.request({ method: 'GET', url: '/' }).then((response) => {
@@ -7,42 +11,33 @@ describe('Tests about singup and query of cods from postal code', () => {
       expect(body).to.equal('Consulta CEP API')
     })
   })
-  
+
   before(() => {
-    cy.task('queryCollection');
+    this.fixtures = new Map<string, any>()
+      ;[
+        'queryInvalid',
+        'queryTipoCepInvalid',
+        'queryValid',
+      ].forEach((name) => {
+        cy.fixture(name).then((value) => {
+          this.fixtures.set(name, value)
+        })
+      })
+  })
 
-    this.fixtures = new Map<string, any>();
+  beforeEach(() => {
+    cy.task('queryCollection')
+  })
 
-    const fixturesNames: string[] = [
-      'validCep',
-      'invalidCep',
-      'invalidLogradouro'
-    ];
+  it('should save a valid CEP', () => {
+    requestOptions.body = this.fixtures.get('query')
 
-    fixturesNames.forEach((fixtureName) => {
-      cy.fixture(fixtureName).then((fixture) => {
-        this.fixtures.set(fixtureName, fixture);
-      });
-    });
-  });
-  
-  it('deve salvar um CEP com dados válidos', () => {
-    const validCep = this.fixtures.get('validCep');
-    
-    const requestOptions: Partial<Cypress.RequestOptions> = {
-      method: 'POST',
-      url: '/ceps',
-      body: <Cypress.RequestBody>validCep,
-      failOnStatusCode: false
-    };
-
-    cy.request(requestOptions)
-      .then(({ body, status }) => {
-        expect(status).to.equal(201);
-        const { mensagem } = body;
-        expect(mensagem).to.equal('CEP cadastrado com sucesso');
-      });
-  });
+    cy.request(requestOptions).then(({ body, status }) => {
+      expect(status).to.equal(201)
+      const { contact } = body
+      expect(contact._id).to.not.null
+    })
+  })
 
   // it('não deve salvar um CEP com um número de CEP inválido', () => {
   //   const invalidCep = this.fixtures.get('invalidCep');

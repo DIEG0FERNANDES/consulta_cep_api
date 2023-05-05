@@ -7,8 +7,7 @@ const DB_NAME = 'consulta-cep-test'
 const DB_URL = `mongodb://localhost:27017/${DB_NAME}`
 let db: Db | null = null;
 (async () => {
-  const dataUrl = `${DB_URL}/${DB_NAME}`;
-  const connection = await MongoClient.connect(dataUrl)
+  const connection = await MongoClient.connect(DB_URL)
   db = connection.db(DB_NAME)
 })()
 
@@ -18,7 +17,7 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       on('task', {
         async queryCollection() {
-          await db?.collection('ceps').deleteMany({})
+          await db?.collection('querys').deleteMany({})
           return null
         }
       })
