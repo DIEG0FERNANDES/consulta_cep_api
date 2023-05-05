@@ -69,4 +69,4 @@ export class QueryController {
   }
 }
 
-export const queryRegExp = new RegExp(/^\d{5}\-\d{3}$/);
+const queryRegExp = new RegExp(/^\d{5}\-\d{3}$/);

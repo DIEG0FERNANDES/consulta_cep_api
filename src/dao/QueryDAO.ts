@@ -21,7 +21,7 @@ export class QueryDAO {
         return queryObject.at(0);
     }
 
-    // apenas coisas do doador de projeto para inspiração
+    // apenas coisas para inspiração
     //   async findByName(name: string) {
     //     const contacts = await ContactModel.find<Contact>({
     //       name: {
