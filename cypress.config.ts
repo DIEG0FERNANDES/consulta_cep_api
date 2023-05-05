@@ -16,7 +16,7 @@ export default defineConfig({
     baseUrl: 'http://localhost:3001',
     setupNodeEvents(on, config) {
       on('task', {
-        async queryCollection() {
+        async cepCollection() {
           await db?.collection('querys').deleteMany({})
           return null
         }
