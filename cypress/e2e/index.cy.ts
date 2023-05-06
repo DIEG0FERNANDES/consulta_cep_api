@@ -1,3 +1,8 @@
+const requestOptions: Partial<Cypress.RequestOptions> = {
+  method: 'POST',
+  url: '/querys',
+  failOnStatusCode: false,
+}
 describe('Tests over /querys path', () => {
   beforeEach(() => {
     cy.task('cepCollection')
@@ -14,17 +19,9 @@ describe('Tests over /querys path', () => {
       });
     });
   })
+  it('should save a valid cep', () => {
+    requestOptions.body = this.fixtures.get('queryValid')
 
-
-  it('should save a valid CEP', () => {
-    const queryValid = this.fixtures.get('queryValid')
-
-    const requestOptions: Partial<Cypress.RequestOptions> = {
-      method: 'POST',
-      url: '/querys',
-      body: <Cypress.RequestBody>queryValid,
-      failOnStatusCode: false,
-    }
     cy.request(requestOptions).then(({ body, status }) => {
       expect(status).to.equal(201)
       const { mensagem } = body
@@ -32,21 +29,14 @@ describe('Tests over /querys path', () => {
     })
   })
 
-  // it('should not save a CEP with invalid number', () => {
-  //   const queryInvalid = this.fixtures.get('queryInvalid');
+  it('should not save a CEP with invalid number', () => {
+    requestOptions.body = this.fixtures.get('queryInvalid');
 
-  //   const requestOptions: Partial<Cypress.RequestOptions> = {
-  //     method: 'POST',
-  //     url: '/querys',
-  //     body: <Cypress.RequestBody>queryInvalid,
-  //     failOnStatusCode: false
-  //   };
-
-  //   cy.request(requestOptions)
-  //     .then(({ body, status }) => {
-  //       expect(status).to.equal(404);
-  //       const { mensagensDeErro }: { mensagensDeErro: string[] } = body;
-  //       expect(mensagensDeErro.at(0)).to.equal('Número de CEP inválido');
-  //     });
-  // })
+    cy.request(requestOptions)
+      .then(({ body, status }) => {
+        expect(status).to.equal(404);
+        const { mensagensDeErro }: { mensagensDeErro: string[] } = body;
+        expect(mensagensDeErro.at(0)).to.equal('Número de CEP inválido');
+      });
+  })
 })
